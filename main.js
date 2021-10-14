@@ -1,7 +1,7 @@
 const fighterOne = {
     className: ['player1', 'js-subzero'],
     name: 'Subzero',
-    hp: 89,
+    hp: 90,
     img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
     weapon: [' kori blade', 'shurikens', 'ice bomb'],
     attack: function() {
@@ -12,7 +12,7 @@ const fighterOne = {
 const fighterSecond = {
     className: ['player2', 'js-scorpion'],
     name: 'Scorpion',
-    hp: 89,
+    hp: 90,
     img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
     weapon: ['homura kunai', 'donryu\'s fire', 'hellfire kunai'],
     attack: function() {
@@ -20,9 +20,8 @@ const fighterSecond = {
     }
 };
 
-
+const arenas = document.querySelector('.arenas');
 const createPlayer = (fighter) => {
-    const arenas = document.querySelector('.arenas');
     const player = document.createElement('div');
     player.className = fighter.className.join(' ');
 
@@ -34,8 +33,12 @@ const createPlayer = (fighter) => {
 
     const life = document.createElement('div');
     life.classList.add('life');
-    life.style.width = 100 + '%';
-    life.innerText = fighter.hp;
+
+    life.style.width = fighter.hp + '%';
+    const lifeScore = document.createElement('div');
+    lifeScore.classList.add('life-score');
+    lifeScore.innerText = fighter.hp;
+    progressBar.appendChild(lifeScore);
 
 
     const name = document.createElement('div');
