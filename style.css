@@ -225,4 +225,18 @@ body {
 .js-scorpion .progressbar {
     border-color: #2684bf;
 }
+.life-score {
+    padding: 5px;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translate(0%,-50%);
+    color: #fff;
+    font-weight: bold;
+}
+.js-scorpion .life-score {
+    right: unset;
+    left: 0;
+    transform: translate(0%, -50%);
+}
 
