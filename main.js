@@ -1,51 +1,65 @@
 const fighterOne = {
-    className: ['player1', 'js-subzero'],
+    className: ['player1', 'js-player-one'],
     name: 'Subzero',
-    hp: 90,
+    hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
     weapon: [' kori blade', 'shurikens', 'ice bomb'],
     attack: function() {
-        console.log(fighterOne.name + 'Fight...')
+        console.log(this.name + 'Fight...')
     }
 };
 
 const fighterSecond = {
-    className: ['player2', 'js-scorpion'],
+    className: ['player2', 'js-player-second'],
     name: 'Scorpion',
-    hp: 90,
+    hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
     weapon: ['homura kunai', 'donryu\'s fire', 'hellfire kunai'],
     attack: function() {
-        console.log(fighterSecond.name + 'Fight...')
+        console.log(this.name + 'Fight...')
     }
 };
 
 const arenas = document.querySelector('.arenas');
+const randomButton = arenas.querySelector('.button');
+const MINNUM = 1;
+const MAXNUM = 20;
+
+const randomNum = (minNum, maxNum) => {
+    const numberRand = Math.floor(Math.random() * (maxNum - minNum) + minNum);
+    return numberRand;
+};
+
+function createElement(tagName, className) {
+    const tag = document.createElement(tagName);
+    
+    if(className){
+        tag.classList.add(className);
+    }
+
+    return tag;
+}
+
 const createPlayer = (fighter) => {
-    const player = document.createElement('div');
+    const player = createElement('div');
     player.className = fighter.className.join(' ');
 
-    const progressBar = document.createElement('div');
-    progressBar.classList.add('progressbar');
+    const progressBar = createElement('div', 'progressbar');
+    const character = createElement('div', 'character');
 
-    const character = document.createElement('div');
-    character.classList.add('character');
-
-    const life = document.createElement('div');
-    life.classList.add('life');
-
+    const life = createElement('div', 'life');
     life.style.width = fighter.hp + '%';
-    const lifeScore = document.createElement('div');
-    lifeScore.classList.add('life-score');
+
+    const lifeScore = createElement('div', 'life-score');
     lifeScore.innerText = fighter.hp;
+
     progressBar.appendChild(lifeScore);
 
 
-    const name = document.createElement('div');
-    name.classList.add('name');
+    const name = createElement('div', 'name');
     name.innerText = fighter.name; 
 
-    const img = document.createElement('img');
+    const img = createElement('img');
     img.src = fighter.img;
     character.appendChild(img);
 
@@ -53,9 +67,48 @@ const createPlayer = (fighter) => {
     player.appendChild(character);
     progressBar.appendChild(life);
     progressBar.appendChild(name);
-    arenas.appendChild(player);
+  
+    return player;
 
 };
 
-createPlayer(fighterOne);
-createPlayer(fighterSecond);
+const displayWinner = (name) => {
+    const winText = createElement('div', 'winTitle');
+    winText.innerText = `${name} wins!!!`;
+       
+    return winText;
+
+};
+
+
+
+const changeHP = (player) => {
+    const playerLifeProgress = document.querySelector(`.${player.className[0]} .life`);
+    const playerLifeScore = document.querySelector(`.${player.className[0]} .life-score`);
+    player.hp -= randomNum(MINNUM, MAXNUM);
+    
+    playerLifeProgress.style.width =  player.hp + '%';
+    playerLifeScore.innerText = `${+player.hp} %`;
+     if(player.hp <= 5) {
+        playerLifeScore.innerText = 0;
+        playerLifeProgress.style.cssText = "padding:0; width:0;";
+        randomButton.style.display = 'none';
+    }
+
+    if(fighterOne.hp <= 5) {
+        arenas.appendChild(displayWinner(fighterSecond.name));
+    } 
+    
+    if(fighterSecond.hp <= 5) {
+        arenas.appendChild(displayWinner(fighterOne.name));
+    }
+    
+};
+
+randomButton.addEventListener('click', () => {
+    changeHP(fighterOne);
+    changeHP(fighterSecond);
+});
+
+arenas.appendChild(createPlayer(fighterOne));
+arenas.appendChild(createPlayer(fighterSecond));
