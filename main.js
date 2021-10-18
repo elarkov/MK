@@ -80,11 +80,7 @@ const displayWinner = (name) => {
 
 };
 
-const displayDraw = () => {
-    const winText = createElement('div', 'winTitle');
-    winText.innerText = 'No winner in this fight!';;
-    return winText;
-};
+
 
 const changeHP = (player) => {
     const playerLifeProgress = document.querySelector(`.${player.className[0]} .life`);
@@ -97,20 +93,17 @@ const changeHP = (player) => {
         playerLifeScore.innerText = 0;
         playerLifeProgress.style.cssText = "padding:0; width:0;";
         randomButton.style.display = 'none';
-        getNameWinner(fighterOne, fighterSecond);
     }
+
+    if(fighterOne.hp <= 5) {
+        arenas.appendChild(displayWinner(fighterSecond.name));
+    } 
+    
+    if(fighterSecond.hp <= 5) {
+        arenas.appendChild(displayWinner(fighterOne.name));
+    }
+    
 };
-
-function getNameWinner(playerOne, playerSecond) {
-    if(playerOne.hp > playerSecond.hp) {
-        arenas.appendChild(displayWinner(playerOne.name));
-    } else if(playerOne.hp < playerSecond.hp) {
-        arenas.appendChild(displayWinner(playerSecond.name));
-    } else if(playerOne.hp <= 5 && playerSecond.hp <= 5) {
-        arenas.appendChild(displayDraw());
-    }
-}
-
 
 randomButton.addEventListener('click', () => {
     changeHP(fighterOne);
