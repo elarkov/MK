@@ -29,9 +29,16 @@ const fighterSecond = {
 };
 
 const arenas = document.querySelector('.arenas');
-const randomButton = arenas.querySelector('.button');
+const controlForm = document.querySelector('.control');
+
 const MINNUM = 1;
 const MAXNUM = 20;
+const HIT = {
+    head: 30,
+    body: 25,
+    foot: 20,
+};
+const ATTACK = ['head', 'body', 'foot'];
 
 
 /**function generates random number from 1 to 20 */
@@ -96,7 +103,6 @@ const showResult = function(name) {
     return resultText;
 };
 
-
 /**function changes  the fighter's lifeprogress */
  function changeHP(num) {
     
@@ -122,7 +128,6 @@ function renderHP() {
 
     if(this.hp <= 0){
         playerLifeScore.innerText = 0;
-        lineProgress.style.cssText = 'padding:0; width:0;';
     }
 };
 
@@ -135,20 +140,12 @@ function createReloadButton() {
     restartButton.addEventListener('click', function() {
         window.location.reload();
     });
+
     return reloadWrap;
 }
 
-randomButton.addEventListener('click', function(){
-    fighterOne.changeHP(randomNum(MINNUM, MAXNUM));
-    fighterSecond.changeHP(randomNum(MINNUM, MAXNUM));
-
-    fighterOne.elHP();
-    fighterSecond.elHP();
-
-    fighterOne.renderHP();
-    fighterSecond.renderHP();
-
-    /**when fighters have 0 points the button will disable */
+function getResultFight() {
+      /**when fighters have 0 points the button will disable */
     if(fighterOne.hp === 0 || fighterSecond.hp === 0) {
         randomButton.disabled = true;
         arenas.appendChild(createReloadButton());
@@ -162,7 +159,55 @@ randomButton.addEventListener('click', function(){
     } else if(fighterOne.hp === 0 && fighterSecond.hp === 0) {
         arenas.appendChild(showResult());
     }
-});
+    
+}
 
 arenas.appendChild(createPlayer(fighterOne));
 arenas.appendChild(createPlayer(fighterSecond));
+
+function enemyAttack() {
+    const hit = ATTACK[randomNum(1, 3)];
+    const defence = ATTACK[randomNum(1, 3)];
+    
+    return {
+        value: randomNum(MINNUM, HIT[hit]),
+        hit,
+        defence
+    }
+}
+
+controlForm.addEventListener('submit', function(event) {
+    event.preventDefault();
+    const enemy = enemyAttack();
+    
+    const attack = {};
+
+    for(let item of controlForm) {
+        if(item.checked && item.name === 'hit') {
+            attack.value = randomNum(MINNUM, HIT[item.value]);
+            attack.hit = item.value;
+        }
+
+        if(item.checked && item.name === 'defence') {
+            attack.defence = item.value;
+        }
+
+        item.checked = false;
+    }
+
+    if(attack.hit !== enemy.defence) {
+        fighterSecond.changeHP(attack.value);
+        fighterSecond.renderHP();
+    }
+
+    if(enemy.hit !== attack.defence) {
+        fighterOne.changeHP(enemy.value);
+        fighterOne.renderHP();
+    }
+
+    getResultFight();
+  
+
+    // console.log('####: Я', attack);
+    // console.log('####: Computer', enemy);
+});
