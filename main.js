@@ -29,7 +29,9 @@ const fighterSecond = {
 };
 
 const arenas = document.querySelector('.arenas');
+const randomButton = document.querySelector('.button');
 const controlForm = document.querySelector('.control');
+const chat = document.querySelector('.chat');
 
 const MINNUM = 1;
 const MAXNUM = 20;
@@ -79,7 +81,8 @@ const logs = {
     ],
     draw: 'Ничья - это тоже победа!'
 };
-
+const timeDate = new Date();
+const currentTimeFight = timeDate.getHours() + ':' + timeDate.getMinutes();
 
 /**function generates random number from 1 to 20 */
 const randomNum = function(minNum, maxNum) {
@@ -218,6 +221,7 @@ function playerAttack() {
 }
 
 function getResultFight() {
+    let restulFightInLog;
     /**when fighters have 0 points the button will disable */
   if(fighterOne.hp === 0 || fighterSecond.hp === 0) {
       randomButton.disabled = true;
@@ -226,20 +230,53 @@ function getResultFight() {
 
   /**if anyone has points 0 and less then opposition side to display name winner */
   if(fighterOne.hp === 0 && fighterOne.hp < fighterSecond.hp) {
+
+      restulFightInLog = logs.end[randomNum(0,2)].replace('[playerWins]', fighterSecond.name).replace('[playerLose]', fighterOne.name);
+
+      chat.insertAdjacentHTML('afterbegin', restulFightInLog);
       arenas.appendChild(showResult(fighterSecond.name));
+
   } else if(fighterSecond.hp === 0 && fighterSecond.hp < fighterOne.hp) {
+
+      restulFightInLog = logs.end[randomNum(0,2)].replace('[playerWins]', fighterOne.name).replace('[playerLose]', fighterSecond.name);
+
+      chat.insertAdjacentHTML('afterbegin', restulFightInLog);
       arenas.appendChild(showResult(fighterOne.name));
+
   } else if(fighterOne.hp === 0 && fighterSecond.hp === 0) {
+
+      restulFightInLog = logs.draw;
+      chat.insertAdjacentHTML('afterbegin', restulFightInLog);
       arenas.appendChild(showResult());
   }
   
 }
 
-function generateLogs(type, player1, player2) {
-    const text = logs[type][randomNum(MINNUM, MAXNUM)].replace('[playerKick]', player1.name);
-    console.log(text);
+function generateLogs(type, timeFight, player1, player2, value) {
+    const text = timeFight + ' - ' + logs[type][randomNum(MINNUM, 8)].replace('[playerKick]', player1.name).replace('[playerDefence]', player2.name);
+    let resultLog;
+
+    switch(type) {
+        case 'hit':
+            resultLog = `<p>${text} -${value} [${player2.hp}/100}]</p>`;
+            break;
+        case 'defence':
+            resultLog = `<p>${text}</p>`;
+    }
+
+    chat.insertAdjacentHTML('afterbegin', resultLog);
 }
 
+window.addEventListener('DOMContentLoaded', startChat);
+
+function startChat(startLogText, player1, player2) {
+    const startText = startLogText.start.replace('[time]', currentTimeFight).replace('[player1]', player1.name).replace('[player2]', player2.name);
+    const el = `<p>${startText}</p>`;
+
+    chat.insertAdjacentHTML('afterbegin', el);
+}
+
+startChat(logs, fighterOne, fighterSecond);
 
 controlForm.addEventListener('submit', function(event) {
     event.preventDefault();
@@ -251,17 +288,21 @@ controlForm.addEventListener('submit', function(event) {
     if(player.defence !== enemy.hit) {
         fighterOne.changeHP(enemy.value);
         fighterOne.renderHP();
-        generateLogs('hit', fighterSecond, fighterOne);
+        generateLogs('hit', currentTimeFight, fighterSecond, fighterOne, enemy.value);
+    } else {
+      generateLogs('defence', currentTimeFight, fighterSecond, fighterOne, player.value);
     }
 
     if(enemy.defence !== player.hit) {
         fighterSecond.changeHP(player.value);
         fighterSecond.renderHP();
+        generateLogs('hit', currentTimeFight, fighterOne, fighterSecond, player.value);
+    } else {
+        generateLogs('defence', currentTimeFight, fighterOne, fighterSecond, player.value);
     }
 
-    getResultFight();
-  
+    getResultFight(logs);
 
-    // console.log('####: Я', attack);
-    // console.log('####: Computer', enemy);
+    
+  
 });
