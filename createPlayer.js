@@ -1,4 +1,3 @@
-import { changeHP, elHP, renderHP } from "./gameProgress.js";
 import { createElement } from "./util.js";
 
 const arenas = document.querySelector('.arenas');
@@ -11,11 +10,36 @@ class Player {
     this.hp = props.hp;
     this.img = props.img;
     this.weapon = props.weapon;
-    this.changeHP = props.changeHP;
-    this.elHP = props.elHP;
-    this.renderHP = props.renderHP;
-    this.attack = props.attack;
   }
+
+  changeHP = (num) => {
+    this.hp -= num;
+    if (this.hp <= 0) {
+      this.hp = 0;
+    }
+  }
+
+  elHP = () => {
+    const playerLifeProgress = document.querySelector(`.player${this.id} .life`);
+    return playerLifeProgress;
+  }
+
+  renderHP = () => {
+    const lineProgress = this.elHP();
+    const playerLifeScore = document.querySelector(`.player${this.id} .life-score`);
+
+    lineProgress.style.width = this.hp + '%';
+    playerLifeScore.innerText = `${this.hp} %`;
+
+    if (this.hp <= 0) {
+      playerLifeScore.innerText = 0;
+    }
+  }
+
+  attack = () => {
+    console.log(this.name + 'Fight...')
+  }
+
 }
 
 const fighterOne = new Player({
@@ -25,12 +49,6 @@ const fighterOne = new Player({
   hp: 100,
   img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
   weapon: [' kori blade', 'shurikens', 'ice bomb'],
-  changeHP: changeHP,
-  elHP: elHP,
-  renderHP: renderHP,
-  attack: function () {
-    console.log(this.name + 'Fight...')
-  }
 });
 
 const fighterSecond = new Player({
@@ -40,12 +58,6 @@ const fighterSecond = new Player({
   hp: 100,
   img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
   weapon: ['homura kunai', 'donryu\'s fire', 'hellfire kunai'],
-  changeHP: changeHP,
-  elHP: elHP,
-  renderHP: renderHP,
-  attack: function () {
-    console.log(this.name + 'Fight...')
-  }
 });
 
 /**function creates DOM of fighter on game field */

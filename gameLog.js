@@ -1,6 +1,9 @@
 import { randomNum } from "./util.js";
 import {MINNUM} from "./gameAttack.js";
+import { fighterOne, fighterSecond } from "./createPlayer.js";
 
+const timeDate = new Date();
+const currentTimeFight = timeDate.getHours() + ':' + timeDate.getMinutes();
 const chat = document.querySelector('.chat');
 const logs = {
   start: 'Часы показывали [time], когда [player1] и [player2] бросили вызов друг другу.',
@@ -58,4 +61,12 @@ const generateLogs = (type, timeFight, player1, player2, value) => {
   chat.insertAdjacentHTML('afterbegin', resultLog);
 }
 
-export {chat, logs, generateLogs};
+const startChat = () => {
+  const startText = logs["start"].replace('[time]', currentTimeFight).replace('[player1]', fighterOne["name"]).replace('[player2]', fighterSecond["name"]);
+  const el = `<p>${startText}</p>`;
+  chat.insertAdjacentHTML('afterbegin', el);
+}
+
+window.addEventListener('DOMContentLoaded', startChat);
+
+export {chat, logs, generateLogs, currentTimeFight};
