@@ -1,9 +1,8 @@
 import { randomNum, createElement, createReloadButton } from "./util.js";
-import { arenas, fighterOne, fighterSecond } from "./main.js";
+import { arenas, fighterOne, fighterSecond } from "./createPlayer.js";
 import {logs, chat} from './gameLog.js';
 
 const randomButton = document.querySelector('.button');
-
 
 /**function displays the result of fight */
 const showResult = (name) => {
