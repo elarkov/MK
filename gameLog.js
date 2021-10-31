@@ -1,6 +1,6 @@
 import { randomNum } from "./util.js";
-import {MINNUM} from "./gameAttack.js";
-import { fighterOne, fighterSecond } from "./createPlayer.js";
+import { controlForm, enemyAttack, MINNUM, playerAttack } from "./gameAttack.js";
+import {getResultFight} from './gameResult.js';
 
 const timeDate = new Date();
 const currentTimeFight = timeDate.getHours() + ':' + timeDate.getMinutes();
@@ -45,6 +45,13 @@ const logs = {
   draw: 'Ничья - это тоже победа!'
 };
 
+const startChat = (fighterOne, fighterSecond) => {
+  const startText = logs["start"].replace('[time]', currentTimeFight).replace('[player1]', fighterOne["name"]).replace('[player2]', fighterSecond["name"]);
+  const el = `<p>${startText}</p>`;
+  chat.insertAdjacentHTML('afterbegin', el);
+}
+
+
 
 const generateLogs = (type, timeFight, player1, player2, value) => {
   const text = timeFight + ' - ' + logs[type][randomNum(MINNUM, logs[type].length - 1)].replace('[playerKick]', player1.name).replace('[playerDefence]', player2.name);
@@ -61,12 +68,10 @@ const generateLogs = (type, timeFight, player1, player2, value) => {
   chat.insertAdjacentHTML('afterbegin', resultLog);
 }
 
-const startChat = () => {
-  const startText = logs["start"].replace('[time]', currentTimeFight).replace('[player1]', fighterOne["name"]).replace('[player2]', fighterSecond["name"]);
-  const el = `<p>${startText}</p>`;
-  chat.insertAdjacentHTML('afterbegin', el);
-}
 
-window.addEventListener('DOMContentLoaded', startChat);
 
-export {chat, logs, generateLogs, currentTimeFight};
+
+
+
+
+export { chat, logs, generateLogs, currentTimeFight, startChat};

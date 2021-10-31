@@ -1,5 +1,5 @@
 import { createElement } from "./util.js";
-
+import { controlForm, enemyAttack, playerAttack } from "./gameAttack.js";
 const arenas = document.querySelector('.arenas');
 
 class Player {
@@ -26,6 +26,7 @@ class Player {
 
   renderHP = () => {
     const lineProgress = this.elHP();
+    console.log(lineProgress);
     const playerLifeScore = document.querySelector(`.player${this.id} .life-score`);
 
     lineProgress.style.width = this.hp + '%';
@@ -40,59 +41,65 @@ class Player {
     console.log(this.name + 'Fight...')
   }
 
+  createPlayer = () => {
+    const player = createElement('div');
+    player.className = this.className.join(' ');
+  
+    const progressBar = createElement('div', 'progressbar');
+    const character = createElement('div', 'character');
+  
+    const life = createElement('div', 'life');
+    life.style.width = this.hp + '%';
+  
+    const lifeScore = createElement('div', 'life-score');
+    lifeScore.innerText = this.hp;
+  
+    progressBar.appendChild(lifeScore);
+  
+    const name = createElement('div', 'name');
+    name.innerText = this.name;
+  
+    const img = createElement('img');
+    img.src = this.img;
+    character.appendChild(img);
+  
+    player.appendChild(progressBar);
+    player.appendChild(character);
+    progressBar.appendChild(life);
+    progressBar.appendChild(name);
+  
+    return player;
+  }
+
+  onSubmit = (fighterOne, fighterSecond) => {
+  
+    controlForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+  
+      const enemy = enemyAttack();
+      const player = playerAttack();
+  
+      if (player.defence !== enemy.hit) {
+        fighterOne.changeHP(enemy.value);
+        fighterOne.renderHP();
+        generateLogs('hit', currentTimeFight, fighterSecond, fighterOne, enemy.value);
+      } else {
+        generateLogs('defence', currentTimeFight, fighterSecond, fighterOne, player.value);
+      }
+  
+      if (enemy.defence !== player.hit) {
+        fighterSecond.changeHP(player.value);
+        fighterSecond.renderHP();
+        generateLogs('hit', currentTimeFight, fighterOne, fighterSecond, player.value);
+      } else {
+        generateLogs('defence', currentTimeFight, fighterOne, fighterSecond, player.value);
+      }
+  
+      getResultFight(logs);
+  
+    });
+  };
+
 }
 
-const fighterOne = new Player({
-  id: 1,
-  className: ['player1', 'js-player-one'],
-  name: 'Subzero',
-  hp: 100,
-  img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
-  weapon: [' kori blade', 'shurikens', 'ice bomb'],
-});
-
-const fighterSecond = new Player({
-  id: 2,
-  className: ['player2', 'js-player-second'],
-  name: 'Scorpion',
-  hp: 100,
-  img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
-  weapon: ['homura kunai', 'donryu\'s fire', 'hellfire kunai'],
-});
-
-/**function creates DOM of fighter on game field */
-const createPlayer = (fighter) => {
-  const player = createElement('div');
-  player.className = fighter.className.join(' ');
-
-  const progressBar = createElement('div', 'progressbar');
-  const character = createElement('div', 'character');
-
-  const life = createElement('div', 'life');
-  life.style.width = fighter.hp + '%';
-
-  const lifeScore = createElement('div', 'life-score');
-  lifeScore.innerText = fighter.hp;
-
-  progressBar.appendChild(lifeScore);
-
-  const name = createElement('div', 'name');
-  name.innerText = fighter.name;
-
-  const img = createElement('img');
-  img.src = fighter.img;
-  character.appendChild(img);
-
-  player.appendChild(progressBar);
-  player.appendChild(character);
-  progressBar.appendChild(life);
-  progressBar.appendChild(name);
-
-  return player;
-
-};
-
-arenas.appendChild(createPlayer(fighterOne));
-arenas.appendChild(createPlayer(fighterSecond));
-
-export {arenas, fighterOne, fighterSecond};
+export {arenas, Player};
