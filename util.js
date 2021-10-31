@@ -22,7 +22,7 @@ const createReloadButton = () => {
   reloadWrap.appendChild(restartButton);
 
   restartButton.addEventListener('click', function () {
-    window.location.reload();
+    window.location.href = './index.html';
   });
 
   return reloadWrap;

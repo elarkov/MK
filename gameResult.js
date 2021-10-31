@@ -1,5 +1,5 @@
 import { randomNum, createElement, createReloadButton } from "./util.js";
-import { arenas, fighterOne, fighterSecond } from "./createPlayer.js";
+import { arenas } from "./createPlayer.js";
 import {logs, chat} from './gameLog.js';
 
 const randomButton = document.querySelector('.button');
@@ -18,7 +18,7 @@ const showResult = (name) => {
 };
 
 
-const getResultFight = () => {
+const getResultFight = (fighterOne, fighterSecond) => {
   let restulFightInLog;
   /**when fighters have 0 points the button will disable */
   if (fighterOne.hp === 0 || fighterSecond.hp === 0) {
