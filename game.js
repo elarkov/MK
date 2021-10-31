@@ -41,5 +41,5 @@ class Game {
 
 const game = new Game();
 
-export {game};
+export default game;
 
