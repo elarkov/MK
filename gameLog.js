@@ -1,6 +1,5 @@
 import { randomNum } from "./util.js";
-import { controlForm, enemyAttack, MINNUM, playerAttack } from "./gameAttack.js";
-import {getResultFight} from './gameResult.js';
+import {MINNUM } from "./gameAttack.js";
 
 const timeDate = new Date();
 const currentTimeFight = timeDate.getHours() + ':' + timeDate.getMinutes();
@@ -50,8 +49,6 @@ const startChat = (fighterOne, fighterSecond) => {
   const el = `<p>${startText}</p>`;
   chat.insertAdjacentHTML('afterbegin', el);
 }
-
-
 
 const generateLogs = (type, timeFight, player1, player2, value) => {
   const text = timeFight + ' - ' + logs[type][randomNum(MINNUM, logs[type].length - 1)].replace('[playerKick]', player1.name).replace('[playerDefence]', player2.name);

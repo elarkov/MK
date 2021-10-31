@@ -1,5 +1,4 @@
 import { createElement } from "./util.js";
-import { controlForm, enemyAttack, playerAttack } from "./gameAttack.js";
 const arenas = document.querySelector('.arenas');
 
 class Player {
