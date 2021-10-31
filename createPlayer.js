@@ -4,7 +4,7 @@ const arenas = document.querySelector('.arenas');
 
 class Player {
   constructor(props) {
-    this.id = props.id;
+    this.player = props.player;
     this.className = props.className;
     this.name = props.name;
     this.hp = props.hp;
@@ -20,14 +20,14 @@ class Player {
   }
 
   elHP = () => {
-    const playerLifeProgress = document.querySelector(`.player${this.id} .life`);
+    const playerLifeProgress = document.querySelector(`.player${this.player} .life`);
     return playerLifeProgress;
   }
 
   renderHP = () => {
     const lineProgress = this.elHP();
     console.log(lineProgress);
-    const playerLifeScore = document.querySelector(`.player${this.id} .life-score`);
+    const playerLifeScore = document.querySelector(`.player${this.player} .life-score`);
 
     lineProgress.style.width = this.hp + '%';
     playerLifeScore.innerText = `${this.hp} %`;
@@ -70,35 +70,6 @@ class Player {
   
     return player;
   }
-
-  onSubmit = (fighterOne, fighterSecond) => {
-  
-    controlForm.addEventListener('submit', (event) => {
-      event.preventDefault();
-  
-      const enemy = enemyAttack();
-      const player = playerAttack();
-  
-      if (player.defence !== enemy.hit) {
-        fighterOne.changeHP(enemy.value);
-        fighterOne.renderHP();
-        generateLogs('hit', currentTimeFight, fighterSecond, fighterOne, enemy.value);
-      } else {
-        generateLogs('defence', currentTimeFight, fighterSecond, fighterOne, player.value);
-      }
-  
-      if (enemy.defence !== player.hit) {
-        fighterSecond.changeHP(player.value);
-        fighterSecond.renderHP();
-        generateLogs('hit', currentTimeFight, fighterOne, fighterSecond, player.value);
-      } else {
-        generateLogs('defence', currentTimeFight, fighterOne, fighterSecond, player.value);
-      }
-  
-      getResultFight(logs);
-  
-    });
-  };
 
 }
 

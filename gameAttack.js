@@ -41,7 +41,7 @@ function playerAttack() {
     item.checked = false;
   }
 
-  return attack;
+  return attack; // {hit: 'foot', defence: 'head'}
 }
 
 export {MINNUM, enemyAttack, playerAttack};

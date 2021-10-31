@@ -68,10 +68,4 @@ const generateLogs = (type, timeFight, player1, player2, value) => {
   chat.insertAdjacentHTML('afterbegin', resultLog);
 }
 
-
-
-
-
-
-
 export { chat, logs, generateLogs, currentTimeFight, startChat};
